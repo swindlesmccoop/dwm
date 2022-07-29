@@ -2,16 +2,13 @@
 
 /* appearance */
 static const unsigned int borderpx       = 3;   /* border pixel of windows */
-static const unsigned int snap           = 32;  /* snap pixel */
+static const unsigned int snap           = 0;  /* snap pixel */
 static const int swallowfloating         = 1;   /* 1 means swallow floating windows by default */
 static const unsigned int gappih         = 10;  /* horiz inner gap between windows */
 static const unsigned int gappiv         = 10;  /* vert inner gap between windows */
 static const unsigned int gappoh         = 10;  /* horiz outer gap between windows and screen edge */
 static const unsigned int gappov         = 30;  /* vert outer gap between windows and screen edge */
 static const int smartgaps_fact          = 1;   /* gap factor when there is only one client; 0 = no gaps, 3 = 3x outer gaps */
-static const int usealtbar               = 1;        /* 1 means use non-dwm status bar */
-static const char *altbarclass           = "Polybar"; /* Alternate bar class name */
-static const char *altbarcmd             = "$HOME/bar.sh"; /* Alternate bar launch command */
 static const int showbar                 = 1;   /* 0 means no bar */
 static const int topbar                  = 1;   /* 0 means bottom bar */
 /* Status is to be shown on: -1 (all monitors), 0 (a specific monitor by index), 'A' (active monitor) */
@@ -249,10 +246,20 @@ static Key keys[] = {
 	{ MODKEY,                       XK_p,          spawn,                  {.v = dmenucmd } },
 	{ MODKEY,                       XK_j,          focusstack,             {.i = +1 } },
 	{ MODKEY,                       XK_k,          focusstack,             {.i = -1 } },
-	{ MODKEY,                       XK_i,          incnmaster,             {.i = +1 } },
+	//{ MODKEY,                       XK_i,          incnmaster,             {.i = +1 } },
 	//{ MODKEY,                       XK_d,          incnmaster,             {.i = -1 } },
 	{ MODKEY,                       XK_h,          setmfact,               {.f = -0.05} },
 	{ MODKEY,                       XK_l,          setmfact,               {.f = +0.05} },
+	{ MODKEY,              			XK_Down,       moveresize,             {.v = "0x 25y 0w 0h" } },
+	{ MODKEY,              			XK_Up,         moveresize,             {.v = "0x -25y 0w 0h" } },
+	{ MODKEY,              			XK_Right,      moveresize,             {.v = "25x 0y 0w 0h" } },
+	{ MODKEY,              			XK_Left,       moveresize,             {.v = "-25x 0y 0w 0h" } },
+	{ MODKEY|ShiftMask,    			XK_Down,       moveresize,             {.v = "0x 0y 0w 25h" } },
+	{ MODKEY|ShiftMask,    			XK_Up,         moveresize,             {.v = "0x 0y 0w -25h" } },
+	{ MODKEY|ShiftMask,    			XK_Right,      moveresize,             {.v = "0x 0y 25w 0h" } },
+	{ MODKEY|ShiftMask,    			XK_Left,       moveresize,             {.v = "0x 0y -25w 0h" } },
+	{ MODKEY|ShiftMask,             XK_j,          movestack,              {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_k,          movestack,              {.i = -1 } },
 	//{ MODKEY,                       XK_Return,     zoom,                   {0} },
 	//{ MODKEY|Mod4Mask,              XK_u,          incrgaps,               {.i = +1 } },
 	//{ MODKEY|Mod4Mask|ShiftMask,    XK_u,          incrgaps,               {.i = -1 } },
@@ -271,7 +278,6 @@ static Key keys[] = {
 	//{ MODKEY|Mod4Mask,              XK_0,          togglegaps,             {0} },
 	//{ MODKEY|Mod4Mask|ShiftMask,    XK_0,          defaultgaps,            {0} },
 	{ MODKEY,                       XK_Tab,        view,                   {0} },
-	//{ MODKEY|ShiftMask,             XK_c,          killclient,             {0} },
 	{ MODKEY|ShiftMask,             XK_q,          quit,                   {0} },
 	{ MODKEY|ShiftMask,             XK_e,          quit,                   {0} },
 	{ MODKEY|ShiftMask,             XK_F5,         xrdb,                   {.v = NULL } },
@@ -283,9 +289,9 @@ static Key keys[] = {
 	{ MODKEY|ControlMask,           XK_grave,      setscratch,             {.ui = 0 } },
 	{ MODKEY|ShiftMask,             XK_grave,      removescratch,          {.ui = 0 } },
 	{ MODKEY,                       XK_y,          togglefullscreen,       {0} },
-	{ MODKEY|ShiftMask,             XK_f,          fullscreen,             {0} },
-	//{ MODKEY,                       XK_0,          view,                   {.ui = ~SPTAGMASK } },
-	//{ MODKEY|ShiftMask,             XK_0,          tag,                    {.ui = ~SPTAGMASK } },
+	{ MODKEY,             XK_f,          fullscreen,             {0} },
+	{ MODKEY,                       XK_0,          view,                   {.ui = ~SPTAGMASK } },
+	{ MODKEY|ShiftMask,             XK_0,          tag,                    {.ui = ~SPTAGMASK } },
 	{ MODKEY,                       XK_comma,      focusmon,               {.i = -1 } },
 	{ MODKEY,                       XK_period,     focusmon,               {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,      tagmon,                 {.i = -1 } },
@@ -301,17 +307,16 @@ static Key keys[] = {
 	TAGKEYS(                        XK_9,                                  8)
 
 	//custom keybinds
-	{ MODKEY,            XK_b,       togglebar,        {0} },
-	{ MODKEY,            XK_d,       spawn,            {.v = dmenucmd } },
-	{ MODKEY,            XK_f,       togglefullscreen, {0} },
-	{ MODKEY,            XK_m,       zoom,             {0} },
-	{ MODKEY,            XK_o,       incnmaster,       {.i = +1 } },
-	{ MODKEY,            XK_Return,  spawn,            {.v = termcmd } },
-	{ MODKEY|ShiftMask,  XK_Return,  togglescratch,    {.ui = 0 } },
-	{ 0,                 XK_F12,     togglescratch,    {.ui = 0 } },
-	{ MODKEY,            XK_q,       killclient,       {0} },
-	{ MODKEY|ShiftMask,  XK_o,       incnmaster,       {.i = -1 } },
-
+	{ MODKEY,				XK_b,		togglebar,         {0} },
+	{ MODKEY,				XK_d,		spawn,             {.v = dmenucmd } },
+	{ MODKEY,				XK_f,		togglefullscreen,  {0} },
+	{ MODKEY,				XK_m,		zoom,              {0} },
+	{ MODKEY,				XK_o,		incnmaster,        {.i = +1 } },
+	{ MODKEY,				XK_Return,	spawn,             {.v = termcmd } },
+	{ MODKEY|ShiftMask,		XK_o,		incnmaster,        {.i = -1 } },
+	{ MODKEY,				XK_q,		killclient,        {0} },
+	{ MODKEY|ShiftMask,		XK_Return,	togglescratch,     {.ui = 0 } },
+	{ 0,					XK_F12,		togglescratch,     {.ui = 0 } },
 };
 
 
@@ -332,5 +337,47 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,              Button3,        toggletag,      {0} },
 };
 
+/* signal definitions */
+/* signum must be greater than 0 */
+/* trigger signals using `xsetroot -name "fsignal:<signame> [<type> <value>]"` */
+static Signal signals[] = {
+	/* signum                    function */
+	{ "focusstack",              focusstack },
+	{ "setmfact",                setmfact },
+	{ "togglebar",               togglebar },
+	{ "incnmaster",              incnmaster },
+	{ "togglefloating",          togglefloating },
+	{ "focusmon",                focusmon },
+	{ "tagmon",                  tagmon },
+	{ "zoom",                    zoom },
+	{ "incrgaps",                incrgaps },
+	{ "incrigaps",               incrigaps },
+	{ "incrogaps",               incrogaps },
+	{ "incrihgaps",              incrihgaps },
+	{ "incrivgaps",              incrivgaps },
+	{ "incrohgaps",              incrohgaps },
+	{ "incrovgaps",              incrovgaps },
+	{ "togglegaps",              togglegaps },
+	{ "defaultgaps",             defaultgaps },
+	{ "setgaps",                 setgapsex },
+	{ "view",                    view },
+	{ "viewall",                 viewallex },
+	{ "viewex",                  viewex },
+	{ "toggleview",              toggleview },
+	{ "toggleviewex",            toggleviewex },
+	{ "tag",                     tag },
+	{ "tagall",                  tagallex },
+	{ "tagex",                   tagex },
+	{ "toggletag",               toggletag },
+	{ "toggletagex",             toggletagex },
+	{ "togglefullscreen",        togglefullscreen },
+	{ "fullscreen",              fullscreen },
+	{ "togglescratch",           togglescratch },
+	{ "killclient",              killclient },
+	{ "xrdb",                    xrdb },
+	{ "quit",                    quit },
+	{ "setlayout",               setlayout },
+	{ "setlayoutex",             setlayoutex },
+};
 
 

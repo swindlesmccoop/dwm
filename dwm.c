@@ -57,9 +57,10 @@
 #define BARRULES                20
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
 #define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
-#define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->mx+(m)->mw) - MAX((x),(m)->mx)) \
-                               * MAX(0, MIN((y)+(h),(m)->my+(m)->mh) - MAX((y),(m)->my)))
-#define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]))
+#define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
+                               * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
+#define ISVISIBLEONTAG(C, T)    ((C->tags & T))
+#define ISVISIBLE(C)            ISVISIBLEONTAG(C, C->mon->tagset[C->mon->seltags])
 #define LENGTH(X)               (sizeof X / sizeof X[0])
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
@@ -774,7 +775,6 @@ configurerequest(XEvent *e)
 {
 	Client *c;
 	Monitor *m;
-	Bar *bar;
 	XConfigureRequestEvent *ev = &e->xconfigurerequest;
 	XWindowChanges wc;
 
@@ -815,13 +815,6 @@ configurerequest(XEvent *e)
 	} else {
 		wc.x = ev->x;
 		wc.y = ev->y;
-		m = wintomon(ev->window);
-		for (bar = m->bar; bar; bar = bar->next) {
-			if (bar->win == ev->window) {
-				wc.y = bar->by;
-				wc.x = bar->bx;
-			}
-		}
 		wc.width = ev->width;
 		wc.height = ev->height;
 		wc.border_width = ev->border_width;
@@ -889,23 +882,12 @@ void
 destroynotify(XEvent *e)
 {
 	Client *c;
-	Monitor *m;
-	Bar *bar;
 	XDestroyWindowEvent *ev = &e->xdestroywindow;
 
 	if ((c = wintoclient(ev->window)))
 		unmanage(c, 1);
 	else if ((c = swallowingclient(ev->window)))
 		unmanage(c->swallowing, 1);
-	else {
-		 m = wintomon(ev->window);
-		 for (bar = m->bar; bar; bar = bar->next) {
-		 	if (bar->win == ev->window) {
-				unmanagealtbar(ev->window);
-				break;
-			}
-		}
-	}
 }
 
 void
@@ -1465,9 +1447,6 @@ maprequest(XEvent *e)
 		return;
 	if (wa.override_redirect)
 		return;
-	if (wmclasscontains(ev->window, altbarclass, ""))
-		managealtbar(ev->window, &wa);
-	else
 	if (!wintoclient(ev->window))
 		manage(ev->window, &wa);
 }
@@ -1590,7 +1569,8 @@ propertynotify(XEvent *e)
 
 
 	if ((ev->window == root) && (ev->atom == XA_WM_NAME)) {
-		updatestatus();
+		if (!fake_signal())
+			updatestatus();
 	} else if (ev->state == PropertyDelete) {
 		return; /* ignore */
 	} else if ((c = wintoclient(ev->window))) {
@@ -1787,9 +1767,6 @@ scan(void)
 			if (!XGetWindowAttributes(dpy, wins[i], &wa)
 			|| wa.override_redirect || XGetTransientForHint(dpy, wins[i], &d1))
 				continue;
-			if (wmclasscontains(wins[i], altbarclass, ""))
-				managealtbar(wins[i], &wa);
-			else
 			if (wa.map_state == IsViewable || getstate(wins[i]) == IconicState)
 				manage(wins[i], &wa);
 			else if (gettextprop(wins[i], netatom[NetClientList], swin, sizeof swin))
@@ -2005,8 +1982,6 @@ setup(void)
 
 	grabkeys();
 	focus(NULL);
-	if (usealtbar)
-		spawnbar();
 }
 
 
@@ -2236,8 +2211,6 @@ void
 unmapnotify(XEvent *e)
 {
 	Client *c;
-	Monitor *m;
-	Bar *bar;
 	XUnmapEvent *ev = &e->xunmap;
 
 	if ((c = wintoclient(ev->window))) {
@@ -2245,15 +2218,6 @@ unmapnotify(XEvent *e)
 			setclientstate(c, WithdrawnState);
 		else
 			unmanage(c, 0);
-	}
-	else {
-		 m = wintomon(ev->window);
-		 for (bar = m->bar; bar; bar = bar->next) {
-		 	if (bar->win == ev->window) {
-				unmanagealtbar(ev->window);
-				break;
-			}
-		}
 	}
 }
 
@@ -2301,8 +2265,6 @@ updatebarpos(Monitor *m)
 
 	for (bar = m->bar; bar; bar = bar->next) {
 		bar->bx = m->wx + x_pad;
-		if (bar->external)
-			continue;
 		bar->bw = m->ww - 2 * x_pad;
 	}
 

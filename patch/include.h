@@ -4,7 +4,6 @@
 #include "bar.h"
 
 #include "bar_alpha.h"
-#include "bar_anybar.h"
 #include "bar_ltsymbol.h"
 #include "bar_status.h"
 #include "bar_tags.h"
@@ -13,7 +12,10 @@
 /* Other patches */
 #include "attachx.h"
 #include "cool_autostart.h"
+#include "dwmc.h"
 #include "fullscreen.h"
+#include "moveresize.h"
+#include "movestack.h"
 #include "scratchpad.h"
 #include "swallow.h"
 #include "togglefullscreen.h"
