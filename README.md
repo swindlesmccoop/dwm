@@ -1,6 +1,14 @@
 # DWM
 DWM is my favorite window manager by far due to its simplicity, portability, and low resource usage. However, it requires a decent amount of tweaking if you want to be able to use it for standard tasks.
 
+## Compiling
+### Linux
+`make && sudo make install`
+### OpenBSD
+`gmake && doas gmake install`
+### Windows 10
+Hahahahahahahahahahahahaha
+
 ## Patches applied
 ```
 dwmblocks (statuscmd)
