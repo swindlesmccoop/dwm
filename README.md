@@ -35,6 +35,7 @@ vanitygaps -- add gaps between all windows
 ## Keybinds
 - `Super + Enter` - Spawn terminal (st)
 - `Super + Shift + Enter`, `F12` - Toggle scratchpad terminal
+- `Super + h/l` - Shrink/enlarge master window
 - `Super + d` - dmenu\_run (program launcher)
 - `Super + q` - Kill window
 - `Super + b` - Toggle status bar
