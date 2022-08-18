@@ -24,9 +24,9 @@ FREETYPEINC = /usr/include/freetype2
 # FreeBSD (uncomment)
 #FREETYPEINC = /usr/local/include/freetype2
 # OpenBSD (uncomment)
-FREETYPEINC = ${X11INC}/freetype2
+#FREETYPEINC = ${X11INC}/freetype2
 # OpenBSD - Uncomment this for the swallow patch / SWALLOW_PATCH
-KVMLIB = -lkvm
+#KVMLIB = -lkvm
 
 # Uncomment this for the alpha patch and the winicon patch (BAR_ALPHA_PATCH, BAR_WINICON_PATCH)
 XRENDER = -lXrender
