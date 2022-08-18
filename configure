@@ -1,0 +1,17 @@
+#!/bin/sh
+OS=$(uname)
+
+if [ "$OS" = "Linux" ]; then
+	sed -i '27 s/^/#/' config.mk
+	sed -i '29 s/^/#/' config.mk
+else if [ "$OS" = "OpenBSD" ]; then
+	true
+else if [ "$OS" = "FreeBSD" ]; then
+	sed -i '27 s/^/#/' config.mk
+	sed -i '29 s/^/#/' config.mk
+	sed -i '14 s/.//' config.mk
+	sed -i '15 s/.//' config.mk
+	sed -i '25 s/.//' config.mk
+fi
+fi
+fi
