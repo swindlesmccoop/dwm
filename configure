@@ -1,17 +1,33 @@
 #!/bin/sh
+
+#OS=$(printf 'Linux\nOpenBSD\nFreeBSD\nSolaris' | fzf --layout=reverse --height 40%)
 OS=$(uname)
 
+sed -i 's/##/#/g' config.mk
+sed -i '14 s/^/#/' config.mk
+sed -i '15 s/^/#/' config.mk
+sed -i '25 s/^/#/' config.mk
+sed -i '27 s/^/#/' config.mk
+sed -i '29 s/^/#/' config.mk
+sed -i '65 s/^/#/' config.mk
+sed -i '66 s/^/#/' config.mk
+sed -i 's/##/#/g' config.mk
+
 if [ "$OS" = "Linux" ]; then
-	sed -i '27 s/^/#/' config.mk
-	sed -i '29 s/^/#/' config.mk
-else if [ "$OS" = "OpenBSD" ]; then
 	true
+else if [ "$OS" = "OpenBSD" ]; then
+	sed -i '27 s/.//' config.mk
+	sed -i '29 s/.//' config.mk
 else if [ "$OS" = "FreeBSD" ]; then
-	sed -i '27 s/^/#/' config.mk
-	sed -i '29 s/^/#/' config.mk
 	sed -i '14 s/.//' config.mk
 	sed -i '15 s/.//' config.mk
 	sed -i '25 s/.//' config.mk
+else if [ "$OS" = "Solaris" ]; then
+	sed -i '65 s/.//' config.mk
+	sed -i '66 s/.//' config.mk
 fi
 fi
 fi
+fi
+
+sed -i 's/##/#/g' config.mk

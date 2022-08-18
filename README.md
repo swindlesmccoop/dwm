@@ -2,12 +2,14 @@
 DWM is my favorite window manager by far due to its simplicity, portability, and low resource usage. However, it requires a decent amount of tweaking if you want to be able to use it for standard tasks.
 
 ## Compiling
-### Linux
+### Dependencies
+X11, Xinerama, xcb, freetype
+### Instructions
+Run `./configure` to properly set up values in `config.mk`.
+#### Linux
 `make && sudo make install`
-### OpenBSD
+#### Other (requires GNU Make)
 `gmake && doas gmake install`
-### Windows 10
-Hahahahahahahahahahahahaha
 
 ## Patches applied
 ```
