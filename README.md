@@ -35,6 +35,7 @@ vanitygaps -- add gaps between all windows
 ```
 
 ## Keybinds
+All keybinds can be found by running `man dwm`, but here are the important ones:
 - `Super + Enter` - Spawn terminal (st)
 - `Super + Shift + Enter`, `F12` - Toggle scratchpad terminal
 - `Super + h/l` - Shrink/enlarge master window
