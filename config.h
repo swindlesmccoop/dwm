@@ -237,7 +237,7 @@ static const char *dmenucmd[] = {
 	NULL
 };
 
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { "st", "-e", "tmux", NULL };
 
 
 
@@ -379,5 +379,4 @@ static Signal signals[] = {
 	{ "setlayout",               setlayout },
 	{ "setlayoutex",             setlayoutex },
 };
-
 
