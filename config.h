@@ -239,7 +239,7 @@ static const char *dmenucmd[] = {
 
 static const char *termcmd[]  = { "st", NULL };
 
-
+#include <X11/XF86keysym.h>
 
 static Key keys[] = {
 	/* modifier                     key            function                argument */
@@ -312,6 +312,13 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,     XK_k,       movestack,         {.i = -1 } },
 	{ MODKEY|ShiftMask,		XK_Return,	togglescratch,     {.ui = 0 } },
 	{ 0,					XK_F12,		togglescratch,     {.ui = 0 } },
+
+	{ 0, XF86XK_AudioMute, spawn, SHCMD("pkill -SIGUSR1 dwmblocks") },
+	{ 0, XF86XK_AudioRaiseVolume, spawn, SHCMD("pkill -SIGUSR1 dwmblocks") },
+	{ 0, XF86XK_AudioLowerVolume, spawn, SHCMD("pkill -SIGUSR1 dwmblocks") },
+
+
+
 };
 
 
