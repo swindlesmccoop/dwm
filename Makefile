@@ -8,11 +8,11 @@ OBJ = ${SRC:.c=.o}
 
 # FreeBSD users, prefix all ifdef, else and endif statements with a . for this to work (e.g. .ifdef)
 
-ifdef YAJLLIBS
+.ifdef YAJLLIBS
 all: options dwm dwm-msg
-else
+.else
 all: options dwm
-endif
+.endif
 
 options:
 	@echo dwm build options:
@@ -28,10 +28,10 @@ ${OBJ}: config.h config.mk
 dwm: ${OBJ}
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
 
-ifdef YAJLLIBS
+.ifdef YAJLLIBS
 dwm-msg:
 	${CC} -o $@ patch/ipc/dwm-msg.c ${LDFLAGS}
-endif
+.endif
 
 clean:
 	rm -f dwm ${OBJ} dwm-${VERSION}.tar.gz
@@ -48,14 +48,14 @@ dist: clean
 install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
 	cp -f dwm ${DESTDIR}${PREFIX}/bin
-ifdef YAJLLIBS
+.ifdef YAJLLIBS
 	cp -f dwm-msg ${DESTDIR}${PREFIX}/bin
-endif
+.endif
 	cp -f patch/dwmc ${DESTDIR}${PREFIX}/bin
 	chmod 755 ${DESTDIR}${PREFIX}/bin/dwm
-ifdef YAJLLIBS
+.ifdef YAJLLIBS
 	chmod 755 ${DESTDIR}${PREFIX}/bin/dwm-msg
-endif
+.endif
 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	sed "s/VERSION/${VERSION}/g" < dwm.1 > ${DESTDIR}${MANPREFIX}/man1/dwm.1
 	chmod 644 ${DESTDIR}${MANPREFIX}/man1/dwm.1
