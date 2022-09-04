@@ -134,7 +134,7 @@ static Sp scratchpads[] = {
  * them. This works seamlessly with alternative tags and alttagsdecoration patches.
  */
 static char *tagicons[][NUMTAGS] = {
-	[DEFAULT_TAGS]        = { "1", "2", "3", "4", "5", "6", "7", "8", "9" },
+	[DEFAULT_TAGS]        = { "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX" },
 	[ALTERNATIVE_TAGS]    = { "A", "B", "C", "D", "E", "F", "G", "H", "I" },
 	[ALT_TAGS_DECORATION] = { "<1>", "<2>", "<3>", "<4>", "<5>", "<6>", "<7>", "<8>", "<9>" },
 };
@@ -313,12 +313,13 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,		XK_Return,	togglescratch,     {.ui = 0 } },
 	{ 0,					XK_F12,		togglescratch,     {.ui = 0 } },
 
-	{ 0, XF86XK_AudioMute, spawn, SHCMD("pkill -SIGUSR1 dwmblocks") },
-	{ 0, XF86XK_AudioRaiseVolume, spawn, SHCMD("pkill -SIGUSR1 dwmblocks") },
-	{ 0, XF86XK_AudioLowerVolume, spawn, SHCMD("pkill -SIGUSR1 dwmblocks") },
-
-
-
+	//volume control
+	{ Mod1Mask, XK_m,						spawn,	SHCMD("sndioctl output.mute=!; pkill -SIGUSR1 dwmblocks") },
+	{ Mod1Mask,	XK_equal, 					spawn,	SHCMD("sndioctl output.level=+0.10; pkill -SIGUSR1 dwmblocks") },
+	{ Mod1Mask,	XK_minus, 					spawn,	SHCMD("sndioctl output.level=-0.10; pkill -SIGUSR1 dwmblocks") },
+	{ 0, 		XF86XK_AudioMute,			spawn, 	SHCMD("pkill -SIGUSR1 dwmblocks") },
+	{ 0, 		XF86XK_AudioRaiseVolume,	spawn, 	SHCMD("pkill -SIGUSR1 dwmblocks") },
+	{ 0, 		XF86XK_AudioLowerVolume,	spawn, 	SHCMD("pkill -SIGUSR1 dwmblocks") },
 };
 
 
