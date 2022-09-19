@@ -210,7 +210,6 @@ static const Layout layouts[] = {
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 };
 
-
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
@@ -218,8 +217,6 @@ static const Layout layouts[] = {
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
-
-
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
@@ -239,88 +236,80 @@ static const char *dmenucmd[] = {
 
 static const char *termcmd[]  = { "st", NULL };
 
+///////////////////////////////////////////////KEYBINDS//////////////////////////////////////////////
 #include <X11/XF86keysym.h>
+//different commands per OS
+#ifdef __linux__
+	#define VOL_UP "pamixer --allow-boost -i 10; kill -44 $(pidof dwmblocks)"
+	#define VOL_DOWN "pamixer --allow-boost -d 10; kill -44 $(pidof dwmblocks)"
+	#define VOL_MUTE "pamixer -t; kill -44 $(pidof dwmblocks)"
+#elif __OpenBSD__
+	#define VOL_UP "sndioctl output.level=+0.10; pkill -SIGUSR1 dwmblocks"
+	#define VOL_DOWN "sndioctl output.level=-0.10; pkill -SIGUSR1 dwmblocks"
+	#define VOL_MUTE "sndioctl output.mute=!; pkill -SIGUSR1 dwmblocks"
+#endif
 
 static Key keys[] = {
-	/* modifier                     key            function                argument */
-	{ MODKEY,                       XK_p,          spawn,                  {.v = dmenucmd } },
-	{ MODKEY,                       XK_j,          focusstack,             {.i = +1 } },
-	{ MODKEY,                       XK_k,          focusstack,             {.i = -1 } },
-	//{ MODKEY,                       XK_i,          incnmaster,             {.i = +1 } },
-	//{ MODKEY,                       XK_d,          incnmaster,             {.i = -1 } },
-	{ MODKEY,              			XK_Down,       moveresize,             {.v = "0x 25y 0w 0h" } },
-	{ MODKEY,              			XK_Up,         moveresize,             {.v = "0x -25y 0w 0h" } },
-	{ MODKEY,              			XK_Right,      moveresize,             {.v = "25x 0y 0w 0h" } },
-	{ MODKEY,              			XK_Left,       moveresize,             {.v = "-25x 0y 0w 0h" } },
-	{ MODKEY|ShiftMask,    			XK_Down,       moveresize,             {.v = "0x 0y 0w 25h" } },
-	{ MODKEY|ShiftMask,    			XK_Up,         moveresize,             {.v = "0x 0y 0w -25h" } },
-	{ MODKEY|ShiftMask,    			XK_Right,      moveresize,             {.v = "0x 0y 25w 0h" } },
-	{ MODKEY|ShiftMask,    			XK_Left,       moveresize,             {.v = "0x 0y -25w 0h" } },
-	//{ MODKEY,                       XK_Return,     zoom,                   {0} },
-	//{ MODKEY|Mod4Mask,              XK_u,          incrgaps,               {.i = +1 } },
-	//{ MODKEY|Mod4Mask|ShiftMask,    XK_u,          incrgaps,               {.i = -1 } },
-	//{ MODKEY|Mod4Mask,              XK_i,          incrigaps,              {.i = +1 } },
-	//{ MODKEY|Mod4Mask|ShiftMask,    XK_i,          incrigaps,              {.i = -1 } },
-	//{ MODKEY|Mod4Mask,              XK_o,          incrogaps,              {.i = +1 } },
-	//{ MODKEY|Mod4Mask|ShiftMask,    XK_o,          incrogaps,              {.i = -1 } },
-	//{ MODKEY|Mod4Mask,              XK_6,          incrihgaps,             {.i = +1 } },
-	//{ MODKEY|Mod4Mask|ShiftMask,    XK_6,          incrihgaps,             {.i = -1 } },
-	//{ MODKEY|Mod4Mask,              XK_7,          incrivgaps,             {.i = +1 } },
-	//{ MODKEY|Mod4Mask|ShiftMask,    XK_7,          incrivgaps,             {.i = -1 } },
-	//{ MODKEY|Mod4Mask,              XK_8,          incrohgaps,             {.i = +1 } },
-	//{ MODKEY|Mod4Mask|ShiftMask,    XK_8,          incrohgaps,             {.i = -1 } },
-	//{ MODKEY|Mod4Mask,              XK_9,          incrovgaps,             {.i = +1 } },
-	//{ MODKEY|Mod4Mask|ShiftMask,    XK_9,          incrovgaps,             {.i = -1 } },
-	//{ MODKEY|Mod4Mask,              XK_0,          togglegaps,             {0} },
-	//{ MODKEY|Mod4Mask|ShiftMask,    XK_0,          defaultgaps,            {0} },
-	{ MODKEY,                       XK_Tab,        view,                   {0} },
-	{ MODKEY|ShiftMask,             XK_F5,         xrdb,                   {.v = NULL } },
-	{ MODKEY,                       XK_t,          setlayout,              {.v = &layouts[0]} },
-	//{ MODKEY,                       XK_m,          setlayout,              {.v = &layouts[2]} },
-	{ MODKEY,                       XK_space,      setlayout,              {0} },
-	{ MODKEY|ShiftMask,             XK_space,      togglefloating,         {0} },
-	{ MODKEY,                       XK_grave,      togglescratch,          {.ui = 0 } },
-	{ MODKEY|ControlMask,           XK_grave,      setscratch,             {.ui = 0 } },
-	{ MODKEY|ShiftMask,             XK_grave,      removescratch,          {.ui = 0 } },
-	{ MODKEY,                       XK_y,          togglefullscreen,       {0} },
-	{ MODKEY,                       XK_0,          view,                   {.ui = ~SPTAGMASK } },
-	{ MODKEY|ShiftMask,             XK_0,          tag,                    {.ui = ~SPTAGMASK } },
-	TAGKEYS(                        XK_1,                                  0)
-	TAGKEYS(                        XK_2,                                  1)
-	TAGKEYS(                        XK_3,                                  2)
-	TAGKEYS(                        XK_4,                                  3)
-	TAGKEYS(                        XK_5,                                  4)
-	TAGKEYS(                        XK_6,                                  5)
-	TAGKEYS(                        XK_7,                                  6)
-	TAGKEYS(                        XK_8,                                  7)
-	TAGKEYS(                        XK_9,                                  8)
+	/*modifierkey			function		argument */
+	{ MODKEY,				XK_p,			spawn,					{.v = dmenucmd } },
+	{ MODKEY,				XK_j,			focusstack,				{.i = +1 } },
+	{ MODKEY,				XK_k,			focusstack,				{.i = -1 } },
+	{ MODKEY,				XK_Down,		moveresize,				{.v = "0x 25y 0w 0h" } },
+	{ MODKEY,				XK_Up,			moveresize,				{.v = "0x -25y 0w 0h" } },
+	{ MODKEY,				XK_Right,		moveresize,				{.v = "25x 0y 0w 0h" } },
+	{ MODKEY,				XK_Left,		moveresize,				{.v = "-25x 0y 0w 0h" } },
+	{ MODKEY|ShiftMask,		XK_Down,		moveresize,				{.v = "0x 0y 0w 25h" } },
+	{ MODKEY|ShiftMask,		XK_Up,			moveresize,				{.v = "0x 0y 0w -25h" } },
+	{ MODKEY|ShiftMask,		XK_Right,		moveresize,				{.v = "0x 0y 25w 0h" } },
+	{ MODKEY|ShiftMask,		XK_Left,		moveresize,				{.v = "0x 0y -25w 0h" } },
+	{ MODKEY,				XK_Tab,			view,					{0} },
+	{ MODKEY|ShiftMask,		XK_F5,			xrdb,					{.v = NULL } },
+	{ MODKEY,				XK_t,			setlayout,				{.v = &layouts[0]} },
+	{ MODKEY,				XK_space,		setlayout,				{0} },
+	{ MODKEY|ShiftMask,		XK_space,		togglefloating,			{0} },
+	{ MODKEY,				XK_grave,		togglescratch,			{.ui = 0 } },
+	{ MODKEY|ControlMask,	XK_grave,		setscratch,				{.ui = 0 } },
+	{ MODKEY|ShiftMask,		XK_grave,		removescratch,			{.ui = 0 } },
+	{ MODKEY,				XK_y,			togglefullscreen,		{0} },
+	{ MODKEY,				XK_0,			view,					{.ui = ~SPTAGMASK } },
+	{ MODKEY|ShiftMask,		XK_0,			tag,					{.ui = ~SPTAGMASK } },
+	
+	  TAGKEYS(				XK_1,									0)
+	  TAGKEYS(				XK_2,									1)
+	  TAGKEYS(				XK_3,									2)
+	  TAGKEYS(				XK_4,									3)
+	  TAGKEYS(				XK_5,									4)
+	  TAGKEYS(				XK_6,									5)
+	  TAGKEYS(				XK_7,									6)
+	  TAGKEYS(				XK_8,									7)
+	  TAGKEYS(				XK_9,									8)
 
-	//custom keybinds
-	{ MODKEY,               XK_h,       setmfact,          {.f = -0.05} },
-	{ MODKEY,               XK_l,       setmfact,          {.f = +0.05} },
-	{ MODKEY|ShiftMask,     XK_q,       quit,              {0} },
-	{ MODKEY|ShiftMask,     XK_e,       quit,              {0} },
-	{ MODKEY,				XK_b,		togglebar,         {0} },
-	{ MODKEY,				XK_d,		spawn,             {.v = dmenucmd } },
-	{ MODKEY,				XK_f,		togglefullscreen,  {0} },
-	{ MODKEY,				XK_m,		zoom,              {0} },
-	{ MODKEY,				XK_o,		incnmaster,        {.i = +1 } },
-	{ MODKEY,				XK_Return,	spawn,             {.v = termcmd } },
-	{ MODKEY|ShiftMask,		XK_o,		incnmaster,        {.i = -1 } },
-	{ MODKEY,				XK_q,		killclient,        {0} },
-	{ MODKEY|ShiftMask,     XK_j,       movestack,         {.i = +1 } },
-	{ MODKEY|ShiftMask,     XK_k,       movestack,         {.i = -1 } },
-	{ MODKEY|ShiftMask,		XK_Return,	togglescratch,     {.ui = 0 } },
-	{ 0,					XK_F12,		togglescratch,     {.ui = 0 } },
+	{ MODKEY,				XK_h,			setmfact,				{.f = -0.05} },
+	{ MODKEY,				XK_l,			setmfact,				{.f = +0.05} },
+	{ MODKEY|ShiftMask,     XK_q,quit,								{0} },
+	{ MODKEY|ShiftMask,     XK_e,quit,								{0} },
+	{ MODKEY,				XK_b,			togglebar,				{0} },
+	{ MODKEY,				XK_d,			spawn,					{.v = dmenucmd } },
+	{ MODKEY,				XK_f,			togglefullscreen,		{0} },
+	{ MODKEY,				XK_m,			zoom,					{0} },
+	{ MODKEY,				XK_o,			incnmaster,				{.i = +1 } },
+	{ MODKEY,				XK_Return,		spawn,					{.v = termcmd } },
+	{ MODKEY|ShiftMask,		XK_o,			incnmaster,				{.i = -1 } },
+	{ MODKEY,				XK_q,			killclient,				{0} },
+	{ MODKEY|ShiftMask,     XK_j,			movestack,				{.i = +1 } },
+	{ MODKEY|ShiftMask,     XK_k,			movestack,				{.i = -1 } },
+	{ MODKEY|ShiftMask,		XK_Return,		togglescratch,			{.ui = 0 } },
+	{ 0,					XK_F12,			togglescratch,			{.ui = 0 } },
 
 	//volume control
-	{ Mod1Mask, XK_m,						spawn,	SHCMD("sndioctl output.mute=!; pkill -SIGUSR1 dwmblocks") },
-	{ Mod1Mask,	XK_equal, 					spawn,	SHCMD("sndioctl output.level=+0.10; pkill -SIGUSR1 dwmblocks") },
-	{ Mod1Mask,	XK_minus, 					spawn,	SHCMD("sndioctl output.level=-0.10; pkill -SIGUSR1 dwmblocks") },
-	{ 0, 		XF86XK_AudioMute,			spawn, 	SHCMD("pkill -SIGUSR1 dwmblocks") },
-	{ 0, 		XF86XK_AudioRaiseVolume,	spawn, 	SHCMD("pkill -SIGUSR1 dwmblocks") },
-	{ 0, 		XF86XK_AudioLowerVolume,	spawn, 	SHCMD("pkill -SIGUSR1 dwmblocks") },
+	{ Mod1Mask,				XK_equal, 		spawn,					SHCMD(VOL_UP) },
+	{ Mod1Mask,				XK_minus, 		spawn,					SHCMD(VOL_DOWN) },
+	{ Mod1Mask,				XK_m,			spawn,					SHCMD(VOL_MUTE) },
+	{ 0, 					XF86XK_AudioMute, spawn,				SHCMD("pkill -SIGUSR1 dwmblocks") },
+	{ 0, 					XF86XK_AudioRaiseVolume, spawn,			SHCMD("pkill -SIGUSR1 dwmblocks") },
+	{ 0, 					XF86XK_AudioLowerVolume, spawn,			SHCMD("pkill -SIGUSR1 dwmblocks") },
 };
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /* button definitions */
