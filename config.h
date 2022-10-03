@@ -247,6 +247,10 @@ static const char *termcmd[]  = { "st", NULL };
 	#define VOL_UP "sndioctl output.level=+0.10; pkill -SIGUSR1 dwmblocks"
 	#define VOL_DOWN "sndioctl output.level=-0.10; pkill -SIGUSR1 dwmblocks"
 	#define VOL_MUTE "sndioctl output.mute=!; pkill -SIGUSR1 dwmblocks"
+#elif __FreeBSD__
+	#define VOL_UP "notify-send 'Currently unsupported'"
+	#define VOL_DOWN "notify-send 'Currently unsupported'"
+	#define VOL_MUTE "notify-send 'Currently unsupported'"
 #endif
 
 static Key keys[] = {
