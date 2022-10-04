@@ -1,14 +1,14 @@
 # DWM
-DWM is my favorite window manager by far due to its simplicity, portability, and low resource usage. However, it requires a decent amount of tweaking if you want to be able to use it for standard tasks.
+DWM is my favorite window manager by far due to its simplicity, portability, and low resource usage. However, it requires a decent amount of tweaking if you want to be able to use it for standard tasks. That's what I've aimed to do here, creating a user-friendly environment and memorable keybinds.
 
 ## Compiling
 ### Dependencies
 X11, Xinerama, xcb, freetype
 ### Instructions
-Run `./configure` to properly set up values in `config.mk`.
+Run `./configure` to properly set up `config.mk`.
 #### Linux
 `make && sudo make install`
-#### Other (requires GNU Make)
+#### FreeBSD, OpenBSD
 `gmake && doas gmake install`
 
 ## Patches applied
