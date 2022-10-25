@@ -241,16 +241,25 @@ static const char *termcmd[]  = { "st", NULL };
 //different commands per OS
 #ifdef __linux__
 	#define VOL_UP "pamixer --allow-boost -i 10; kill -44 $(pidof dwmblocks)"
+	#define XK_UP "pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)"
 	#define VOL_DOWN "pamixer --allow-boost -d 10; kill -44 $(pidof dwmblocks)"
+	#define XK_DOWN "pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)"
 	#define VOL_MUTE "pamixer -t; kill -44 $(pidof dwmblocks)"
+	#define VOL_KILL "kill -44 $(pidof dwmblocks)"
 #elif __OpenBSD__
 	#define VOL_UP "sndioctl output.level=+0.10; pkill -SIGUSR1 dwmblocks"
+	#define XK_UP "sndioctl output.level=+0.05; pkill -SIGUSR1 dwmblocks"
 	#define VOL_DOWN "sndioctl output.level=-0.10; pkill -SIGUSR1 dwmblocks"
+	#define XK_DOWN "sndioctl output.level=-0.05; pkill -SIGUSR1 dwmblocks"
 	#define VOL_MUTE "sndioctl output.mute=!; pkill -SIGUSR1 dwmblocks"
+	#define VOL_KILL "pkill -SIGUSR1 dwmblocks"
 #elif __FreeBSD__
 	#define VOL_UP "sndioctl output.level=+0.10; pkill -SIGUSR1 dwmblocks"
+	#define XK_UP "sndioctl output.level=+0.05; pkill -SIGUSR1 dwmblocks"
 	#define VOL_DOWN "sndioctl output.level=-0.10; pkill -SIGUSR1 dwmblocks"
+	#define XK_DOWN "sndioctl output.level=-0.05; pkill -SIGUSR1 dwmblocks"
 	#define VOL_MUTE "sndioctl output.level=-1; pkill -SIGUSR1 dwmblocks"
+	#define VOL_KILL "pkill -SIGUSR1 dwmblocks"
 #endif
 
 static Key keys[] = {
@@ -309,9 +318,9 @@ static Key keys[] = {
 	{ Mod1Mask,				XK_equal, 		spawn,					SHCMD(VOL_UP) },
 	{ Mod1Mask,				XK_minus, 		spawn,					SHCMD(VOL_DOWN) },
 	{ Mod1Mask,				XK_m,			spawn,					SHCMD(VOL_MUTE) },
-	{ 0, 					XF86XK_AudioMute, spawn,				SHCMD("pkill -SIGUSR1 dwmblocks") },
-	{ 0, 					XF86XK_AudioRaiseVolume, spawn,			SHCMD("pkill -SIGUSR1 dwmblocks") },
-	{ 0, 					XF86XK_AudioLowerVolume, spawn,			SHCMD("pkill -SIGUSR1 dwmblocks") },
+	{ 0, 					XF86XK_AudioMute, spawn,				SHCMD(VOL_MUTE) },
+	{ 0, 					XF86XK_AudioRaiseVolume, spawn,			SHCMD(XK_UP) },
+	{ 0, 					XF86XK_AudioLowerVolume, spawn,			SHCMD(XK_DOWN) },
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
