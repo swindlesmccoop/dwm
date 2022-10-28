@@ -34,6 +34,11 @@ togglefullscreen -- use a keybind to make a window fullscreen or not
 vanitygaps -- add gaps between all windows
 ```
 
+## Software Made to Work With This
+- [DWMBlocks](/swindlesmccoop/dwmblocks)
+- [DMenu](/swindlesmccoop/dmenu)
+- [ST](/swindlesmccoop/st)
+
 ## Keybinds
 All keybinds can be found by running `man dwm`, but here are the important ones:
 - `Super + Enter` - Spawn terminal (st)
