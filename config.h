@@ -254,12 +254,12 @@ static const char *termcmd[]  = { "st", NULL };
 	#define VOL_MUTE "sndioctl output.mute=!; pkill -SIGUSR1 dwmblocks"
 	#define VOL_KILL "pkill -SIGUSR1 dwmblocks"
 #elif __FreeBSD__
-	#define VOL_UP "sndioctl output.level=+0.10; pkill -SIGUSR1 dwmblocks"
-	#define XK_UP "sndioctl output.level=+0.05; pkill -SIGUSR1 dwmblocks"
-	#define VOL_DOWN "sndioctl output.level=-0.10; pkill -SIGUSR1 dwmblocks"
-	#define XK_DOWN "sndioctl output.level=-0.05; pkill -SIGUSR1 dwmblocks"
-	#define VOL_MUTE "sndioctl output.level=-1; pkill -SIGUSR1 dwmblocks"
-	#define VOL_KILL "pkill -SIGUSR1 dwmblocks"
+	#define VOL_UP "sndioctl output.level=+0.10"
+	#define XK_UP "sndioctl output.level=+0.05"
+	#define VOL_DOWN "sndioctl output.level=-0.10"
+	#define XK_DOWN "sndioctl output.level=-0.05"
+	#define VOL_MUTE "sndioctl output.level=-1"
+	#define VOL_KILL "pkill -SIGUSR2 dwmblocks"
 #endif
 
 static Key keys[] = {
