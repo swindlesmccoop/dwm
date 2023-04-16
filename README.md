@@ -35,9 +35,9 @@ vanitygaps -- add gaps between all windows
 ```
 
 ## Software Made to Work With This
-- [DWMBlocks](/swindlesmccoop/dwmblocks)
-- [DMenu](/swindlesmccoop/dmenu)
-- [ST](/swindlesmccoop/st)
+- [DWMBlocks](https://github.com/swindlesmccoop/dwmblocks)
+- [DMenu](https://github.com/swindlesmccoop/dmenu)
+- [ST](https://github.com/swindlesmccoop/st)
 
 ## Keybinds
 All keybinds can be found by running `man dwm`, but here are the important ones:
